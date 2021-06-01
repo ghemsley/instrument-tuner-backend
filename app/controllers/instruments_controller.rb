@@ -1,11 +1,23 @@
 class InstrumentsController < ApplicationController
-  def index 
+  def index
     instruments = Instrument.all
     render json: InstrumentSerializer.new(instruments, include: [:tunings]).serializable_hash.to_json
   end
 
   def show
     instrument = Instrument.find(params[:id])
+    render json: InstrumentSerializer.new(instrument, include: [:tunings]).serializable_hash.to_json
+  end
+
+  def create
+    instrument_name = params[:name]
+    instrument_tunings = params[:tunings].collect do |tuning_json|
+      tuning_name = tuning_json[:name]
+      tuning_string = tuning_json[:notes].join(', ')
+      tuning = Tuning.create(name: tuning_name, notes: tuning_string)
+      tuning
+    end
+    instrument = Instrument.create(name: instrument_name, tunings: instrument_tunings)
     render json: InstrumentSerializer.new(instrument, include: [:tunings]).serializable_hash.to_json
   end
 end
