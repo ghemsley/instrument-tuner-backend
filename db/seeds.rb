@@ -5,11 +5,20 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-tunings = Tuning.create([{ name: 'Standard', notes: 'E2, A2, D3, G3, B3, E4' },
-                         { name: 'Drop D', notes: 'D2, A2, D3, G3, B3, E4' },
-                         { name: 'Drop C', notes: 'C2, G2, C3, F3, A3, D4' }])
-guitar = Instrument.create({name: 'Guitar'})
-tunings.each do |tuning|
+guitar_tunings = Tuning.create([{ name: 'Standard', notes: 'E2, A2, D3, G3, B3, E4' },
+                                { name: 'Drop D', notes: 'D2, A2, D3, G3, B3, E4' },
+                                { name: 'Drop C', notes: 'C2, G2, C3, F3, A3, D4' }])
+guitar = Instrument.create({ name: 'Guitar' })
+guitar_tunings.each do |tuning|
   tuning.instrument = guitar
+  tuning.save
+end
+
+violin_tunings = Tuning.create([{ name: 'Standard', notes: 'G3, D4, A4, E5' },
+                                { name: 'Open G', notes: 'G3, D4, G4, D5' },
+                                { name: 'Open A', notes: 'A3, E4, A4, E5' }])
+violin = Instrument.create({ name: 'Violin' })
+violin_tunings.each do |tuning|
+  tuning.instrument = violin
   tuning.save
 end
