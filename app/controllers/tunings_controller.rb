@@ -15,6 +15,11 @@ class TuningsController < ApplicationController
   end
 
   def create
-    logger.info(params)
+    instrument_id = params[:instrumentID]
+    tunings = params[:tunings].collect do |tuning_json|
+      tuning = Tuning.create(instrument_id: instrument_id, name: tuning_json[:name], notes: tuning_json[:notes].join(', '))
+      tuning
+    end
+    render json: TuningSerializer.new(tunings).serializable_hash.to_json
   end
 end
