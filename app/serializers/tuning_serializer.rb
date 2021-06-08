@@ -7,5 +7,4 @@ class TuningSerializer
   attribute :notes do |object|
     object.notes_array
   end
-  set_key_transform :camel_lower
 end
