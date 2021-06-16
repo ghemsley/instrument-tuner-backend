@@ -22,3 +22,11 @@ violin_tunings.each do |tuning|
   tuning.instrument = violin
   tuning.save
 end
+
+[guitar, violin].each do |instrument|
+  result = Unsplash::Photo.search(instrument.name, per_page = 1)
+  image_link = result.first.urls.small
+  image_artist = result.first.user.name
+  image_artist_link = result.first.user.links.html
+  instrument.update(image_link: image_link, image_artist: image_artist, image_artist_link: image_artist_link)
+end
