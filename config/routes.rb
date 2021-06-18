@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  resources :tunings
-  resources :instruments
+  resources :instruments, only: %i[index show create destroy]
+  resources :tunings, only: %i[index show create destroy]
 end
