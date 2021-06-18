@@ -24,4 +24,11 @@ class InstrumentsController < ApplicationController
     instrument = Instrument.create(name: instrument_name, tunings: instrument_tunings, image_link: image_link, image_artist: image_artist, image_artist_link: image_artist_link)
     render json: InstrumentSerializer.new(instrument, include: [:tunings]).serializable_hash.to_json
   end
+
+  def destroy
+    instrument_id = params[:id]
+    instrument = Instrument.find(instrument_id)
+    instrument.destroy
+    render json: InstrumentSerializer.new(instrument).serializable_hash.to_json
+  end
 end
