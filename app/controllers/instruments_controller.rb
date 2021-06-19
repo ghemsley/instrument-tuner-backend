@@ -17,18 +17,24 @@ class InstrumentsController < ApplicationController
       tuning = Tuning.create(name: tuning_name, notes: tuning_string)
       tuning
     end
-    result = Unsplash::Photo.search(instrument_name, per_page = 1)
-    image_link = result.first.urls.small
-    image_artist = result.first.user.name
-    image_artist_link = result.first.user.links.html
-    instrument = Instrument.create(name: instrument_name, tunings: instrument_tunings, image_link: image_link, image_artist: image_artist, image_artist_link: image_artist_link)
-    render json: InstrumentSerializer.new(instrument, include: [:tunings]).serializable_hash.to_json
+    result = UnsplashSearch.new(instrument_name)
+    instrument = Instrument.create(name: instrument_name, tunings: instrument_tunings, image_link: result.image_link,
+                                   image_artist: result.image_artist, image_artist_link: result.image_artist_link)
+    if instrument.errors.any?
+      render json: { status: 'error', code: 500, message: instrument.errors.full_messages.join("\n\n") }
+    else
+      render json: InstrumentSerializer.new(instrument, include: [:tunings]).serializable_hash.to_json
+    end
   end
 
   def destroy
     instrument_id = params[:id]
     instrument = Instrument.find(instrument_id)
     instrument.destroy
-    render json: InstrumentSerializer.new(instrument).serializable_hash.to_json
+    if instrument.errors.any?
+      render json: { status: 'error', code: 500, message: instrument.errors.full_messages.join("\n\n") }
+    else
+      render json: InstrumentSerializer.new(instrument).serializable_hash.to_json
+    end
   end
 end
