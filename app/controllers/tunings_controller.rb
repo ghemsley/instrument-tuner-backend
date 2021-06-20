@@ -15,16 +15,20 @@ class TuningsController < ApplicationController
   end
 
   def create
+    success = true
     instrument_id = params[:instrumentID]
     tunings = params[:tunings].collect do |tuning_json|
       tuning = Tuning.create(instrument_id: instrument_id, name: tuning_json[:name],
                              notes: tuning_json[:notes].join(', '))
       tuning
     end
-    if tunings.errors.any?
-      render json: { status: 'error', code: 500, message: tunings.errors.full_messages.join("\n\n") }
-    else
-      render json: TuningSerializer.new(tunings).serializable_hash.to_json
+    tunings.each do |tuning|
+      next unless tuning.errors.any?
+
+      success = false
+      render json: { status: 'error', code: 500, message: tuning.errors.full_messages.join("\n\n") }
+      break
     end
+    render json: TuningSerializer.new(tunings).serializable_hash.to_json if success
   end
 end
