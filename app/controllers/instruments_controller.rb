@@ -17,9 +17,10 @@ class InstrumentsController < ApplicationController
       tuning = Tuning.create(name: tuning_name, notes: tuning_string)
       tuning
     end
-    result = UnsplashSearch.new(instrument_name)
-    instrument = Instrument.create(name: instrument_name, tunings: instrument_tunings, image_link: result.image_link,
-                                   image_artist: result.image_artist, image_artist_link: result.image_artist_link)
+    result = UnsplashSearch.new(instrument_name) if instrument_name != ''
+    instrument = Instrument.create(name: instrument_name, tunings: instrument_tunings,
+                                   image_link: result&.image_link || '', image_artist: result&.image_artist || '',
+                                   image_artist_link: result&.image_artist_link || '')
     if instrument.errors.any?
       render json: { status: 'error', code: 500, message: instrument.errors.full_messages.join("\n\n") }
     else
