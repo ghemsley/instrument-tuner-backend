@@ -1,4 +1,4 @@
-# Instrument Tuner (Frontend)
+# Instrument Tuner (Backend)
 
 The backend component of a customizable instrument tuner webapp
 
